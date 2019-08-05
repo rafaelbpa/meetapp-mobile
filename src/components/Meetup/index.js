@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { parseISO, format } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -54,3 +55,8 @@ export default function Meetup({ data, onCancel }) {
     </Container>
   );
 }
+
+Meetup.propTypes = {
+  data: PropTypes.oneOfType([PropTypes.element, PropTypes.object]).isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
