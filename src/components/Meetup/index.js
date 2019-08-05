@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { parseISO, format } from 'date-fns';
+import pt from 'date-fns/locale/pt-BR';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import {
@@ -13,30 +15,38 @@ import {
   SubmitButton,
 } from './styles';
 
-export default function Meetup() {
+export default function Meetup({ data, onCancel }) {
+  const dateParsed = useMemo(() => {
+    return format(parseISO(data.date), `dd 'de' MMMM 'às' HH'h'`, {
+      locale: pt,
+    });
+  }, [data.date]);
+
   function handleSubmit() {}
 
   return (
     <Container>
       <Banner
         source={{
-          uri: 'https://api.adorable.io/avatars/450/abott@adorable.png',
+          uri: data.File
+            ? data.File.url
+            : 'https://api.adorable.io/avatars/450/abott@adorable.png',
         }}
       />
 
       <Info>
-        <Title>Meetup de React Native</Title>
+        <Title>{data.title}</Title>
         <HorizontalContainer>
           <Icon name="event" color="#999" size={14} />
-          <DateTime>24 de junho, às 20h</DateTime>
+          <DateTime>{dateParsed}</DateTime>
         </HorizontalContainer>
         <HorizontalContainer>
           <Icon name="place" color="#999" size={14} />
-          <Location>Rua Guilherme Gembala, 260</Location>
+          <Location>{data.location}</Location>
         </HorizontalContainer>
         <HorizontalContainer>
           <Icon name="person" color="#999" size={14} />
-          <Organizer>Organizador: Rafael Araújo</Organizer>
+          <Organizer>Organizador: {data.User.name}</Organizer>
         </HorizontalContainer>
       </Info>
 
