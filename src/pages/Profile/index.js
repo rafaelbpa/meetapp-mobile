@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Background from '~/components/Background';
+import { signOut } from '~/store/modules/auth/actions';
 import { udpateProfileRequest } from '~/store/modules/user/actions';
 
 import {
@@ -13,6 +14,7 @@ import {
   Form,
   FormInput,
   SubmitButton,
+  LogoutButton,
 } from './styles';
 
 export default function Profile() {
@@ -47,6 +49,10 @@ export default function Profile() {
         confirmPassword,
       })
     );
+  }
+
+  function handleLogout() {
+    dispatch(signOut());
   }
 
   return (
@@ -113,6 +119,7 @@ export default function Profile() {
           />
 
           <SubmitButton onPress={handleSubmit}>Atualizar perfil</SubmitButton>
+          <LogoutButton onPress={handleLogout}>Fazer logout</LogoutButton>
         </Form>
       </Container>
     </Background>
