@@ -110,7 +110,7 @@ const tabBarIcon = ({ tintColor }) => (
 );
 
 Registration.navigationOptions = {
-  tabBarLabel: 'Meetups',
+  tabBarLabel: 'Inscrições',
   tabBarIcon,
 };
 

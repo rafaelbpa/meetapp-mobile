@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import Button from '~/components/Button';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -9,8 +10,7 @@ export const Title = styled.Text`
   color: #fff;
   font-weight: bold;
   align-self: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin: 30px 10px;
 `;
 
 export const List = styled.FlatList.attrs({
@@ -19,3 +19,13 @@ export const List = styled.FlatList.attrs({
     padding: 20,
   },
 })``;
+
+export const DateNavigation = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ButtonArrow = styled(Button)`
+  background: transparent;
+`;

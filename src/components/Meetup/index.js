@@ -16,14 +16,12 @@ import {
   SubmitButton,
 } from './styles';
 
-export default function Meetup({ data, onCancel }) {
+export default function Meetup({ data, onRegister }) {
   const dateParsed = useMemo(() => {
     return format(parseISO(data.date), `dd 'de' MMMM 'às' HH'h'`, {
       locale: pt,
     });
   }, [data.date]);
-
-  function handleSubmit() {}
 
   return (
     <Container>
@@ -51,12 +49,12 @@ export default function Meetup({ data, onCancel }) {
         </HorizontalContainer>
       </Info>
 
-      <SubmitButton onPress={handleSubmit}>Realizar inscrição</SubmitButton>
+      <SubmitButton onPress={onRegister}>Realizar inscrição</SubmitButton>
     </Container>
   );
 }
 
 Meetup.propTypes = {
   data: PropTypes.oneOfType([PropTypes.element, PropTypes.object]).isRequired,
-  onCancel: PropTypes.func.isRequired,
+  onRegister: PropTypes.func.isRequired,
 };
