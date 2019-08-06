@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { withNavigationFocus } from 'react-navigation';
 import { Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -7,24 +8,26 @@ import api from '~/services/api';
 
 import Background from '~/components/Background';
 
-import { Container, List } from './styles';
+import { Container, List, Empty } from './styles';
 
 import Subscription from '~/components/Subscription';
 
-export default function Registration() {
+function Registration({ isFocused }) {
   const [registrations, setRegistrations] = useState([]);
 
+  async function loadRegistrations() {
+    const response = await api.get('subscriptions');
+
+    setRegistrations(response.data);
+  }
+
   useEffect(() => {
-    async function loadRegistrations() {
-      const response = await api.get('subscriptions');
-
-      setRegistrations(response.data);
+    if (isFocused) {
+      loadRegistrations();
     }
+  }, [isFocused]);
 
-    loadRegistrations();
-  }, [registrations]);
-
-  async function showCanceledMeetupPopup() {
+  async function showCanceledPopup() {
     Alert.alert(
       'Aviso',
       'Inscrição cancelada com sucesso.',
@@ -34,20 +37,11 @@ export default function Registration() {
   }
 
   async function handleCancel(id) {
-    const response = await api.delete(`subscriptions/${id}`);
+    await api.delete(`subscriptions/${id}`);
 
-    setRegistrations(
-      registrations.map(registration =>
-        registration.id === id
-          ? {
-              ...registration,
-              canceled_at: response.data.canceled_at,
-            }
-          : registration
-      )
-    );
+    loadRegistrations();
 
-    showCanceledMeetupPopup();
+    showCanceledPopup();
   }
 
   async function confirmCancelation(id) {
@@ -72,16 +66,20 @@ export default function Registration() {
   return (
     <Background>
       <Container>
-        <List
-          data={registrations}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Subscription
-              onCancel={() => confirmCancelation(item.id)}
-              data={item}
-            />
-          )}
-        />
+        {registrations.length === 0 ? (
+          <Empty />
+        ) : (
+          <List
+            data={registrations}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <Subscription
+                onCancel={() => confirmCancelation(item.id)}
+                data={item}
+              />
+            )}
+          />
+        )}
       </Container>
     </Background>
   );
@@ -99,3 +97,9 @@ Registration.navigationOptions = {
 tabBarIcon.propTypes = {
   tintColor: PropTypes.string.isRequired,
 };
+
+Registration.propTypes = {
+  isFocused: PropTypes.bool.isRequired,
+};
+
+export default withNavigationFocus(Registration);

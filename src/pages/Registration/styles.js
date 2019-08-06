@@ -10,3 +10,5 @@ export const List = styled.FlatList.attrs({
     padding: 20,
   },
 })``;
+
+export const Empty = styled.View``;
