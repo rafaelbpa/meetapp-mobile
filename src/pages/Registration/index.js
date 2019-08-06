@@ -8,11 +8,18 @@ import api from '~/services/api';
 
 import Background from '~/components/Background';
 
-import { Container, List, Empty } from './styles';
+import {
+  Container,
+  List,
+  EmptyList,
+  TextEmpty,
+  SubmitButton,
+  EmptyView,
+} from './styles';
 
 import Subscription from '~/components/Subscription';
 
-function Registration({ isFocused }) {
+function Registration({ navigation, isFocused }) {
   const [registrations, setRegistrations] = useState([]);
 
   async function loadRegistrations() {
@@ -63,12 +70,25 @@ function Registration({ isFocused }) {
     );
   }
 
+  function handleSearch() {
+    navigation.navigate('Dashboard');
+  }
+
   return (
     <Background>
-      <Container>
-        {registrations.length === 0 ? (
-          <Empty />
-        ) : (
+      {registrations.length === 0 ? (
+        <EmptyView>
+          <EmptyList>
+            <Icon name="search" size={60} color="#333" />
+            <TextEmpty>
+              Você ainda não se inscreveu em nenhum meetup. Que tal procurar em
+              nossa lista de meetups?
+            </TextEmpty>
+            <SubmitButton onPress={handleSearch}>Procurar meetups</SubmitButton>
+          </EmptyList>
+        </EmptyView>
+      ) : (
+        <Container>
           <List
             data={registrations}
             keyExtractor={item => String(item.id)}
@@ -79,8 +99,8 @@ function Registration({ isFocused }) {
               />
             )}
           />
-        )}
-      </Container>
+        </Container>
+      )}
     </Background>
   );
 }
@@ -100,6 +120,9 @@ tabBarIcon.propTypes = {
 
 Registration.propTypes = {
   isFocused: PropTypes.bool.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default withNavigationFocus(Registration);
