@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Alert } from 'react-native';
+import { Alert, ActivityIndicator, View } from 'react-native';
 import { withNavigationFocus } from 'react-navigation';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -17,27 +17,41 @@ import Meetup from '~/components/Meetup';
 function Dashboard({ isFocused }) {
   const [meetups, setMeetups] = useState([]);
   const [date, setDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(true);
+  const [page, setPage] = useState(1);
 
   const dateFormatted = useMemo(
     () => format(date, "d 'de' MMMM", { locale: pt }),
     [date]
   );
 
+  function loadMoreItems() {
+    setPage(page + 1);
+    setLoadMore(true);
+  }
+
   useEffect(() => {
     async function loadMeetups() {
+      setLoading(true);
       const response = await api.get('meetups', {
         params: {
           date,
+          page,
         },
       });
 
-      setMeetups(response.data);
+      const data = page >= 2 ? [...meetups, ...response.data] : response.data;
+
+      setMeetups(data);
+      setLoading(false);
+      setLoadMore(false);
     }
 
-    if (isFocused) {
+    if (isFocused && loadMore) {
       loadMeetups();
     }
-  }, [date, isFocused]);
+  }, [date, isFocused, loadMore, meetups, page]);
 
   async function showMessage(title, message) {
     Alert.alert(title, message, [{ text: 'OK', onPress: () => {} }], {
@@ -56,10 +70,21 @@ function Dashboard({ isFocused }) {
 
   function handlePrevDay() {
     setDate(subDays(date, 1));
+    setLoadMore(true);
   }
 
   function handleNextDay() {
     setDate(addDays(date, 1));
+    setLoadMore(true);
+  }
+
+  function renderFooter() {
+    if (!loading) return null;
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   return (
@@ -81,6 +106,9 @@ function Dashboard({ isFocused }) {
           renderItem={({ item }) => (
             <Meetup onRegister={() => handleRegister(item.id)} data={item} />
           )}
+          onEndReached={loadMoreItems}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={renderFooter}
         />
       </Container>
     </Background>
