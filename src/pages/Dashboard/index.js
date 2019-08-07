@@ -37,8 +37,10 @@ function Dashboard({ isFocused }) {
   );
 
   function loadMoreItems() {
-    setPage(page + 1);
-    setLoadMore(true);
+    if (meetups.length >= 10) {
+      setPage(page + 1);
+      setLoadMore(true);
+    }
   }
 
   useEffect(() => {
@@ -60,6 +62,7 @@ function Dashboard({ isFocused }) {
 
     if (isFocused && loadMore) {
       loadMeetups();
+      setLoadMore(false);
     }
   }, [date, isFocused, loadMore, meetups, page]);
 
@@ -80,11 +83,13 @@ function Dashboard({ isFocused }) {
 
   function handlePrevDay() {
     setDate(subDays(date, 1));
+    setMeetups([]);
     setLoadMore(true);
   }
 
   function handleNextDay() {
     setDate(addDays(date, 1));
+    setMeetups([]);
     setLoadMore(true);
   }
 
