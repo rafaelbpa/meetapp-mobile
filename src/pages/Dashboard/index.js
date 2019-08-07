@@ -13,6 +13,7 @@ import Background from '~/components/Background';
 import { Container, Title, List, DateNavigation, ButtonArrow } from './styles';
 
 import Meetup from '~/components/Meetup';
+import Header from '~/components/Header';
 
 function Dashboard({ isFocused }) {
   const [meetups, setMeetups] = useState([]);
@@ -89,6 +90,7 @@ function Dashboard({ isFocused }) {
 
   return (
     <Background>
+      <Header />
       <Container>
         <DateNavigation>
           <ButtonArrow onPress={handlePrevDay}>

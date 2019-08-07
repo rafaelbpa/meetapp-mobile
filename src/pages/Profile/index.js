@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Background from '~/components/Background';
+import Header from '~/components/Header';
+
 import { signOut } from '~/store/modules/auth/actions';
 import { udpateProfileRequest } from '~/store/modules/user/actions';
 
@@ -57,6 +59,7 @@ export default function Profile() {
 
   return (
     <Background>
+      <Header />
       <Container>
         <Title>Meu perfil</Title>
 

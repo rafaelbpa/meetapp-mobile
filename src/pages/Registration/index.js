@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '~/services/api';
 
 import Background from '~/components/Background';
+import Header from '~/components/Header';
 
 import {
   Container,
@@ -76,6 +77,7 @@ function Registration({ navigation, isFocused }) {
 
   return (
     <Background>
+      <Header />
       {registrations.length === 0 ? (
         <EmptyView>
           <EmptyList>
