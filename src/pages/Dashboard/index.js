@@ -10,7 +10,16 @@ import api from '~/services/api';
 
 import Background from '~/components/Background';
 
-import { Container, Title, List, DateNavigation, ButtonArrow } from './styles';
+import {
+  Container,
+  Title,
+  List,
+  DateNavigation,
+  ButtonArrow,
+  EmptyList,
+  EmptyView,
+  TextEmpty,
+} from './styles';
 
 import Meetup from '~/components/Meetup';
 import Header from '~/components/Header';
@@ -91,28 +100,36 @@ function Dashboard({ isFocused }) {
   return (
     <Background>
       <Header />
-      <Container>
-        <DateNavigation>
-          <ButtonArrow onPress={handlePrevDay}>
-            <Icon name="chevron-left" size={30} color="#fff" />
-          </ButtonArrow>
-          <Title>{dateFormatted}</Title>
-          <ButtonArrow onPress={handleNextDay}>
-            <Icon name="chevron-right" size={30} color="#fff" />
-          </ButtonArrow>
-        </DateNavigation>
-
-        <List
-          data={meetups}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Meetup onRegister={() => handleRegister(item.id)} data={item} />
-          )}
-          onEndReached={loadMoreItems}
-          onEndReachedThreshold={0.1}
-          ListFooterComponent={renderFooter}
-        />
-      </Container>
+      <DateNavigation>
+        <ButtonArrow onPress={handlePrevDay}>
+          <Icon name="chevron-left" size={30} color="#fff" />
+        </ButtonArrow>
+        <Title>{dateFormatted}</Title>
+        <ButtonArrow onPress={handleNextDay}>
+          <Icon name="chevron-right" size={30} color="#fff" />
+        </ButtonArrow>
+      </DateNavigation>
+      {meetups.length === 0 ? (
+        <EmptyView>
+          <EmptyList>
+            <Icon name="event-busy" size={60} color="#333" />
+            <TextEmpty>Não tem nenhum meetup hoje. :(</TextEmpty>
+          </EmptyList>
+        </EmptyView>
+      ) : (
+        <Container>
+          <List
+            data={meetups}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <Meetup onRegister={() => handleRegister(item.id)} data={item} />
+            )}
+            onEndReached={loadMoreItems}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={renderFooter}
+          />
+        </Container>
+      )}
     </Background>
   );
 }
